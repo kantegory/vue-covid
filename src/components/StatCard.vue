@@ -4,7 +4,7 @@
       <v-icon>{{ cardIcon }}</v-icon>
     </div>
     <v-card-title class="headline text-bold">
-      <span class="count" :title="cardAmountNew + 'last day'">
+      <span class="count" :title="cardAmountNew + ' last day'">
         {{ cardAmount }}
       </span>
     </v-card-title>
