@@ -27,13 +27,10 @@ export default {
         { title: 'deaths', bgColor: 'red accent-2', amount: 0, amountNew: 0, icon: 'mdi-emoticon-dead' },
         { title: 'recoveries', bgColor: 'teal lighten-1', amount: 0, amountNew: 0, icon: 'mdi-hospital-box' }
       ],
-      visuals: [{
-        id: 1,
-        chartData: null,
-        options: { responsive: true, maintainAspectRatio: false }
-      }],
+      visuals: [],
       continents: null,
-      allData: null
+      allData: null,
+      countryInfo: false
     }
   },
   components: {
@@ -41,15 +38,19 @@ export default {
     LineChart
   },
   mounted () {
-    this.axios
-      .get('https://corona.lmao.ninja/v2/continents?sort')
-      .then(response => { this.continents = response; this.updateStats() })
-      .catch(error => { console.error('An API error: ', error) })
+    console.log('mounted now')
 
-    this.axios
-      .get('https://corona.lmao.ninja/v2/historical/all')
-      .then(response => { this.allData = response; this.updateVisuals() })
-      .catch(error => { console.error('An API error: ', error) })
+    if (this.countryInfo !== true) {
+      this.axios
+        .get('https://corona.lmao.ninja/v2/continents?sort')
+        .then(response => { this.continents = response; this.updateStats() })
+        .catch(error => { console.error('An API error: ', error) })
+
+      this.axios
+        .get('https://corona.lmao.ninja/v2/historical/all')
+        .then(response => { this.allData = response; this.updateVisuals() })
+        .catch(error => { console.error('An API error: ', error) })
+    }
   },
   methods: {
     updateStats () {
@@ -87,17 +88,18 @@ export default {
         recoveriesPerDay.push(recoveries[key])
       }
 
-      console.log(labels)
-      console.log(casesPerDay)
-
-      this.visuals[0].chartData = {
-        labels: labels,
-        datasets: [{
-          label: 'Total cases',
-          backgroundColor: '#6aaaff',
-          data: casesPerDay
-        }]
-      }
+      this.visuals.push({
+        id: 1,
+        chartData: {
+          labels: labels,
+          datasets: [{
+            label: 'Total cases',
+            backgroundColor: '#6aaaff',
+            data: casesPerDay
+          }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+      })
 
       this.visuals.push({
         id: 2,
@@ -132,6 +134,61 @@ export default {
       this.cards[0].amountNew += lastDayCases
       this.cards[1].amountNew += lastDayDeaths
       this.cards[2].amountNew += lastDayRecoveries
+    },
+    updateCountryStats () {
+      this.countryInfo = true
+
+      let data = this.$store.getters.country
+
+      this.cards[0].amount = data.cases
+      this.cards[1].amount = data.deaths
+      this.cards[2].amount = data.recoveries
+
+      this.visuals = []
+
+      this.visuals.push({
+        id: 1,
+        chartData: {
+          labels: data.visualLabels,
+          datasets: [{
+            label: 'Total cases',
+            backgroundColor: '#6aaaff',
+            data: data.visualData.cases
+          }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+      })
+
+      this.visuals.push({
+        id: 2,
+        chartData: {
+          labels: data.visualLabels,
+          datasets: [{
+            label: 'Deaths',
+            backgroundColor: '#ff5252',
+            data: data.visualData.deatha
+          }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+      })
+
+      this.visuals.push({
+        id: 3,
+        chartData: {
+          labels: data.visualLabels,
+          datasets: [{
+            label: 'recoveries',
+            backgroundColor: '#26a69a',
+            data: data.visualData.recoveries
+          }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+      })
+    }
+  },
+  watch: {
+    currentCountry () {
+      return this.$store.getters.currentCountry
     }
   }
 }
