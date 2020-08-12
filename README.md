@@ -1,8 +1,10 @@
 # vue-covid
 
-> Vue dashboard for COVID-2019 stats
+> Простой дашборд на Vue + Vuetify для отслеживания статистики по Covid-2019.
 
-## Build Setup
+Репозиотрий сделан для моего [онлайн-курса](https://www.youtube.com/watch?v=J0HLJR8m5g0&list=PLAhg4XYCffEkJgFB-0neq79ssc7U99xH6) на ютуб.
+
+## Установка
 
 ``` bash
 # install dependencies
@@ -17,5 +19,3 @@ npm run build
 # build for production and view the bundle analyzer report
 npm run build --report
 ```
-
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
