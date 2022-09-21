@@ -17,7 +17,7 @@
     "vue": "^2.5.2",
     "vue-chartjs": "^3.5.0",
     "vue-router": "^3.0.1",
-    "vuetify": "^2.2.26"
+    "vuetify": "^2.6.10"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
